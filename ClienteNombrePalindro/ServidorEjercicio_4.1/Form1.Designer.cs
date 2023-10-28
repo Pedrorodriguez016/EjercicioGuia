@@ -40,11 +40,13 @@ namespace ServidorEjercicio_4._1
             this.alto = new System.Windows.Forms.RadioButton();
             this.Conectar = new System.Windows.Forms.Button();
             this.Desconectar = new System.Windows.Forms.Button();
+            this.Servicios = new System.Windows.Forms.Button();
+            this.contlbl = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // Ejecutar
             // 
-            this.Ejecutar.Location = new System.Drawing.Point(278, 278);
+            this.Ejecutar.Location = new System.Drawing.Point(137, 278);
             this.Ejecutar.Name = "Ejecutar";
             this.Ejecutar.Size = new System.Drawing.Size(193, 70);
             this.Ejecutar.TabIndex = 0;
@@ -130,9 +132,9 @@ namespace ServidorEjercicio_4._1
             // 
             // Conectar
             // 
-            this.Conectar.Location = new System.Drawing.Point(66, 372);
+            this.Conectar.Location = new System.Drawing.Point(806, 58);
             this.Conectar.Name = "Conectar";
-            this.Conectar.Size = new System.Drawing.Size(181, 50);
+            this.Conectar.Size = new System.Drawing.Size(181, 82);
             this.Conectar.TabIndex = 9;
             this.Conectar.Text = "Conectar";
             this.Conectar.UseVisualStyleBackColor = true;
@@ -140,19 +142,40 @@ namespace ServidorEjercicio_4._1
             // 
             // Desconectar
             // 
-            this.Desconectar.Location = new System.Drawing.Point(484, 372);
+            this.Desconectar.Location = new System.Drawing.Point(806, 278);
             this.Desconectar.Name = "Desconectar";
-            this.Desconectar.Size = new System.Drawing.Size(204, 50);
+            this.Desconectar.Size = new System.Drawing.Size(204, 81);
             this.Desconectar.TabIndex = 10;
             this.Desconectar.Text = "Desconectar";
             this.Desconectar.UseVisualStyleBackColor = true;
             this.Desconectar.Click += new System.EventHandler(this.Desconectar_Click);
             // 
+            // Servicios
+            // 
+            this.Servicios.Location = new System.Drawing.Point(509, 194);
+            this.Servicios.Name = "Servicios";
+            this.Servicios.Size = new System.Drawing.Size(229, 70);
+            this.Servicios.TabIndex = 11;
+            this.Servicios.Text = "¿Cuantos servicios has hecho?";
+            this.Servicios.UseVisualStyleBackColor = true;
+            this.Servicios.Click += new System.EventHandler(this.Servicios_Click);
+            // 
+            // contlbl
+            // 
+            this.contlbl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.contlbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.contlbl.Location = new System.Drawing.Point(544, 278);
+            this.contlbl.Name = "contlbl";
+            this.contlbl.Size = new System.Drawing.Size(155, 96);
+            this.contlbl.TabIndex = 12;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1022, 396);
+            this.Controls.Add(this.contlbl);
+            this.Controls.Add(this.Servicios);
             this.Controls.Add(this.Desconectar);
             this.Controls.Add(this.Conectar);
             this.Controls.Add(this.alto);
@@ -184,6 +207,8 @@ namespace ServidorEjercicio_4._1
         private System.Windows.Forms.RadioButton alto;
         private System.Windows.Forms.Button Conectar;
         private System.Windows.Forms.Button Desconectar;
+        private System.Windows.Forms.Button Servicios;
+        private System.Windows.Forms.Label contlbl;
     }
 }
 
