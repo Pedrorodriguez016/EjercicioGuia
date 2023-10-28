@@ -3,9 +3,87 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/socket.h>
-#include <fcntl.h>
 #include <netinet/in.h>
 #include <stdio.h>
+#include <pthread.h>
+
+void *AtenderCliente (void *socket)
+{
+	int sock_conn;
+	int *s;
+	s= (int *) socket;
+	sock_conn= *s;
+	
+	//int socket_conn = * (int *) socket;
+	
+	char peticion[512];
+	char respuesta[512];
+	int ret;
+	
+	
+	int terminar =0;
+	// Entramos en un bucle para atender todas las peticiones de este cliente
+	//hasta que se desconecte
+	while (terminar ==0)
+	{
+		// Ahora recibimos la petici?n
+		ret=read(sock_conn,peticion, sizeof(peticion));
+		printf ("Recibido\n");
+		
+		// Tenemos que a?adirle la marca de fin de string 
+		// para que no escriba lo que hay despues en el buffer
+		peticion[ret]='\0';
+		
+		
+		printf ("Peticion: %s\n",peticion);
+		
+		// vamos a ver que quieren
+		char *p = strtok( peticion, "/");
+		int codigo =  atoi (p);
+		// Ya tenemos el c?digo de la petici?n
+		char nombre[20];
+		
+		if (codigo !=0)
+		{
+			p = strtok( NULL, "/");
+			
+			strcpy (nombre, p);
+			// Ya tenemos el nombre
+			printf ("Codigo: %d, Nombre: %s\n", codigo, nombre);
+		}
+		
+		if (codigo ==0) //petici?n de desconexi?n
+			terminar=1;
+		else if (codigo ==1) //piden la longitd del nombre
+			sprintf (respuesta,"%d",strlen (nombre));
+		else if (codigo ==2)
+			// quieren saber si el nombre es bonito
+			if((nombre[0]=='M') || (nombre[0]=='S'))
+			strcpy (respuesta,"SI");
+			else
+				strcpy (respuesta,"NO");
+			else //quiere saber si es alto
+			{
+				p = strtok( NULL, "/");
+				float altura =  atof (p);
+				if (altura > 1.70)
+					sprintf (respuesta, "%s: eres alto",nombre);
+				else
+					sprintf (respuesta, "%s: eresbajo",nombre);
+			}
+			
+			if (codigo !=0)
+			{
+				
+				printf ("Respuesta: %s\n", respuesta);
+				// Enviamos respuesta
+				write (sock_conn,respuesta, strlen(respuesta));
+			}
+	}
+	// Se acabo el servicio para este cliente
+	close(sock_conn); 
+
+}
 
 int Nombre_Palindro(char Nombre[20]){
 	int PrimeraLetra = 0;
@@ -53,47 +131,23 @@ int main(int argc, char *argv[]) {
 	if (listen(sock_listen, 10) < 0)
 		error("listen");
 	int i;
-	for (i=0;i<10;i++){
-		printf("Escuchando \n");
-	// acepto la conexion de un cliente
+	int sockets[100];
+	pthread_t thread;
+	i=0;
+	for (;;){
+		printf ("Escuchando\n");
+		
 		sock_conn = accept(sock_listen, NULL, NULL);
-		printf("he recibido conexion \n");
+		printf ("He recibido conexion\n");
 		
-		ret=read(sock_conn,peticion, sizeof(peticion));
-		printf("Recibido \n");
+		sockets[i] =sock_conn;
+		//sock_conn es el socket que usaremos para este cliente
 		
-		//Poner la marcar de fin de string
-		peticion[ret]='\0';
+		// Crear thead y decirle lo que tiene que hacer
 		
-		//Escribimos la peticion
-		printf("Peticion: %s \n", peticion);
+		pthread_create (&thread, NULL, AtenderCliente,&sockets[i]);
+		i=i+1;
 		
-		char *p= strtok(peticion, "/");
-		int codigo = atoi(p);
-		
-		
-	
-	if (codigo==1)// Te determina si tu nombre es Palindro y si es asi te lo devuelve en mayusculas
-	{
-		char respuesta[20];
-		p=strtok(NULL, "/");
-		char nombre[20];
-		strcpy(nombre, p);
-		printf("Codigo: %d Nombre: %s\n", codigo, nombre);
-	
-	if(Nombre_Palindro(nombre)==0){
-		printf("El nombre no es Palindro \n");
-		strcpy(respuesta,"NO");
-	}
-	else{
-		convertirMayusculas(nombre);//Al ser el nombre Palindro te lo devuelve en mayusculas
-		printf("El nombre %s es palindro \n", nombre);
-		strcpy(respuesta, nombre);
-	}
-	write( sock_conn, respuesta, strlen(respuesta));
-	}
-	close(sock_conn); // Necessari per a que el client detecti EOF 
-	
 	}
 
 	
